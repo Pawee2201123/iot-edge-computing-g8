@@ -1,0 +1,108 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IoT Fall Detection Dashboard</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js (CDN) -->
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- ====== Header ====== -->
+    <header class="header">
+      <h1>Real‑time Monitoring</h1>
+      <div class="actions">
+        <span class="chip">Last update: <strong id="lastUpdate">--:--:--</strong></span>
+        <span class="chip">Status: <span id="systemStatus" class="badge ok">OK</span></span>
+        <!-- <button onclick="document.body.classList.toggle('light')" class="chip">Theme</button> -->
+      </div>
+    </header>
+
+    <!-- ====== Main ====== -->
+    <main class="main">
+      <!-- Stat Cards -->
+      <section class="cards">
+        <article class="card">
+          <div class="title">Active Devices</div>
+          <div class="value" id="statDevices">0</div>
+          <div class="trend">connected</div>
+        </article>
+        <article class="card">
+          <div class="title">Peak Accel (last 1m)</div>
+          <div class="value" id="statPeakAccel">-</div>
+          <div class="trend">g</div>
+        </article>
+        <article class="card">
+          <div class="title">Avg Temp (last 1m)</div>
+          <div class="value" id="statAvgTemp">-</div>
+          <div class="trend">°C</div>
+        </article>
+        <article class="card">
+          <div class="title">Fall Events (24h)</div>
+          <div class="value" id="statFalls">0</div>
+          <div class="trend"><span class="badge crit">detected</span></div>
+        </article>
+
+      </section>
+
+      <!-- Content Grid -->
+      <section class="content-grid">
+        <!-- Latest table -->
+        <article class="panel table-panel">
+          <h2>
+            Latest Telemetry
+          </h2>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Accel (g)</th>
+                  <th>Temp (°C)</th>
+                  <th>Updated</th>
+                  <th>Fall Status</th>
+                </tr>
+              </thead>
+              <tbody id="telemetryRows">
+                <!-- Rows injected by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- Chart -->
+        <article class="panel chart-panel">
+          <h2>
+            Accel & Temp
+          </h2>
+          <canvas id="chart" height="220"></canvas>
+        </article>
+
+        <!-- Alerts -->
+        <article class="panel alerts-panel">
+          <h2>
+            Fall Alerts
+            <span class="sub">Most recent fall candidates</span>
+          </h2>
+          <div class="alerts" id="alertsList">
+            <!-- Alerts injected by app.js -->
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- ====== Footer ====== -->
+    <footer class="footer">
+      © 2025 IoT Edge Computing Group 8
+    </footer>
+  </div>
+
+</body>
+</html>
