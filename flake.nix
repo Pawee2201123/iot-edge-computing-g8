@@ -52,21 +52,21 @@
 
           # 3. Your Auto-Launch Logic
           shellHook = ''
-            # Check if we are already inside the FHS to prevent loops
-            if [ -z "$IN_NIX_SHELL_IMPURE" ]; then
-              echo "🚀 Auto-launching PlatformIO FHS environment (Zsh)..."
+# Check if we are already inside the FHS to prevent loops
+                  if [ -z "$IN_NIX_SHELL_IMPURE" ]; then
+                    echo "🚀 Auto-launching PlatformIO FHS environment (Zsh)..."
 
-              # Set the flag so the inner shell knows it's the inner shell
-              export IN_NIX_SHELL_IMPURE=1
-              
-              # Replace the current bash process with the FHS zsh process
-              exec pio-shell
-            fi
-            
-            # This part runs ONLY inside the inner Zsh
-            echo "✅ You are now in the FHS Zsh."
-          '';
+# Set the flag so the inner shell knows it's the inner shell
+                      export IN_NIX_SHELL_IMPURE=1
+
+# Replace the current bash process with the FHS zsh process
+                      exec pio-shell
+                      fi
+
+# This part runs ONLY inside the inner Zsh
+                      echo "✅ You are now in the FHS Zsh."
+                      '';
         };
       }
-    );
+      );
 }

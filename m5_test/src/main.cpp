@@ -9,6 +9,13 @@
 const char* ssid     = "Pawee-iphone";     // <--- EDIT THIS
 const char* password = "05237wifi"; // <--- EDIT THIS
 const char* mqtt_server = "172.20.10.13"; // <--- EDIT THIS (Your PC IP)
+// --- CONFIGURATION ---
+/*
+const char* ssid     = "aterm-3465e4-g";     // <--- EDIT THIS
+const char* password = "5dc0fc9134eee"; // <--- EDIT THIS
+const char* mqtt_server = "192.168.10.106"; // <--- EDIT THIS (Your PC IP)
+*/
+
 
 WiFiClient espClient;
 PubSubClient client(espClient);
