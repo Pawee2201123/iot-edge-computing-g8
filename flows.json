@@ -1,0 +1,563 @@
+[
+    {
+        "id": "7c36c4b739bcdc18",
+        "type": "tab",
+        "label": "フロー 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3226e966e17f1bb4",
+        "type": "change",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.acc_x",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "ae79ad0d4d777c6b",
+                "b1cd3953fc264705",
+                "b5d99fe8dc9a35e7"
+            ]
+        ]
+    },
+    {
+        "id": "ae79ad0d4d777c6b",
+        "type": "ui_text",
+        "z": "7c36c4b739bcdc18",
+        "group": "0da5fc5c523f41a7",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "加速度",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 370,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "b1cd3953fc264705",
+        "type": "ui_chart",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "group": "0da5fc5c523f41a7",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-20",
+        "ymax": "20",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 370,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b5d99fe8dc9a35e7",
+        "type": "ui_gauge",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "group": "0da5fc5c523f41a7",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-20",
+        "max": "20",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 370,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7a060a62ecbb55e0",
+        "type": "debug",
+        "z": "7c36c4b739bcdc18",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "15fdde9ccbe57a6a",
+        "type": "http in",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "url": "putdata",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "8205a4a66a2fa689",
+                "7a060a62ecbb55e0",
+                "27647624dea5367e",
+                "7663fc304be6a13c",
+                "2d4e2389cadf93ec"
+            ]
+        ]
+    },
+    {
+        "id": "8205a4a66a2fa689",
+        "type": "http response",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 310,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "27647624dea5367e",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Accel",
+        "func": "var content = msg.payload;\nmsg.topic = \"INSERT INTO Accel (x, y, z, comp)\"+\n\"VALUES (\"+\ncontent.x+\", \"+\ncontent.y+\", \"+\ncontent.z+\", \"+\ncontent.comp+\");\"; \nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 440,
+        "wires": [
+            [
+                "d8173418ea86aba0"
+            ]
+        ]
+    },
+    {
+        "id": "d8173418ea86aba0",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 570,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "294729af8eb4f24b",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Accel",
+        "func": "msg.topic = \"INSERT INTO Accel (x, y, z, comp)\"+\n\"VALUES (\"+\n10.1+\", \"+\n10.2+\", \"+\n10.3+\", \"+\n10.4+\");\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 342,
+        "y": 752,
+        "wires": [
+            [
+                "f460afa7edd03d80"
+            ]
+        ]
+    },
+    {
+        "id": "9e479332287d78d1",
+        "type": "debug",
+        "z": "7c36c4b739bcdc18",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 722,
+        "y": 752,
+        "wires": []
+    },
+    {
+        "id": "d73c8d599e7b66f5",
+        "type": "change",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.steps",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 220,
+        "wires": [
+            [
+                "d6c1f7421b91ab7e",
+                "90c40cec5f3fd01f"
+            ]
+        ]
+    },
+    {
+        "id": "d6c1f7421b91ab7e",
+        "type": "ui_text",
+        "z": "7c36c4b739bcdc18",
+        "group": "bbcfb93e7f2fbfd3",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "歩数",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 370,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "90c40cec5f3fd01f",
+        "type": "ui_chart",
+        "z": "7c36c4b739bcdc18",
+        "name": "",
+        "group": "bbcfb93e7f2fbfd3",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 370,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ae906a6891224d6",
+        "type": "inject",
+        "z": "7c36c4b739bcdc18",
+        "name": "test",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 112,
+        "y": 752,
+        "wires": [
+            [
+                "294729af8eb4f24b",
+                "25552846fa6b4c7d",
+                "8472a2584822cf17"
+            ]
+        ]
+    },
+    {
+        "id": "f460afa7edd03d80",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 532,
+        "y": 752,
+        "wires": [
+            [
+                "9e479332287d78d1"
+            ]
+        ]
+    },
+    {
+        "id": "25552846fa6b4c7d",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Commu",
+        "func": "msg.topic = \"INSERT INTO Commu (emerg, msg)\"+\n\"VALUES (\"+\n1+\", \"+\n\"'hello')\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 352,
+        "y": 812,
+        "wires": [
+            [
+                "212e7ab9be933034"
+            ]
+        ]
+    },
+    {
+        "id": "8472a2584822cf17",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Heat",
+        "func": "msg.topic = \"INSERT INTO Heat (temp, hum, wbgt)\"+\n\"VALUES (\"+\n10.1+\", \"+\n10.2+\", \"+\n10.3+\");\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 342,
+        "y": 872,
+        "wires": [
+            [
+                "ff047d977cf847fc"
+            ]
+        ]
+    },
+    {
+        "id": "212e7ab9be933034",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 532,
+        "y": 812,
+        "wires": [
+            [
+                "9e479332287d78d1"
+            ]
+        ]
+    },
+    {
+        "id": "ff047d977cf847fc",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 532,
+        "y": 872,
+        "wires": [
+            [
+                "9e479332287d78d1"
+            ]
+        ]
+    },
+    {
+        "id": "7663fc304be6a13c",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Commu",
+        "func": "var content = msg.payload;\nmsg.topic = \"INSERT INTO Commu (emerg, msg)\"+\n\"VALUES (\"+\ncontent.emerg+\", \"+\ncontent.msg+\");\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 500,
+        "wires": [
+            [
+                "d08cce28027187ad"
+            ]
+        ]
+    },
+    {
+        "id": "2d4e2389cadf93ec",
+        "type": "function",
+        "z": "7c36c4b739bcdc18",
+        "name": "INSERT Heat",
+        "func": "var content = msg.payload;\nmsg.topic = \"INSERT INTO Heat (temp, hum, wbgt)\"+\n\"VALUES (\"+\ncontent.temp+\", \"+\ncontent.hum+\", \"+\ncontent.wbgt+\");\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 560,
+        "wires": [
+            [
+                "3999a8491c5f7134"
+            ]
+        ]
+    },
+    {
+        "id": "d08cce28027187ad",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 570,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3999a8491c5f7134",
+        "type": "mysql",
+        "z": "7c36c4b739bcdc18",
+        "mydb": "a32083852712911e",
+        "name": "",
+        "x": 570,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0da5fc5c523f41a7",
+        "type": "ui_group",
+        "name": "x軸加速度",
+        "tab": "75f5b712703fe4b1",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a32083852712911e",
+        "type": "MySQLdatabase",
+        "name": "EdgeDevices",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "EdgeDevices",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "bbcfb93e7f2fbfd3",
+        "type": "ui_group",
+        "name": "歩数",
+        "tab": "75f5b712703fe4b1",
+        "order": 2,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "75f5b712703fe4b1",
+        "type": "ui_tab",
+        "name": "歩数計",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "a688443272ca5cc7",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-mysql": "2.0.0"
+        }
+    }
+]
