@@ -1,0 +1,150 @@
+:root{
+        --bg:#f6f6f6;
+        --card:#ffffff;
+        --text:#222;
+        --muted:#666;
+        --border:#ddd;
+        --shadow:0 6px 18px rgba(0,0,0,.08);
+        
+        --ok-bg:#e8f7e8;
+        --ok:#2b7a56;
+        --ok-b:#8ad4a7;
+        
+        --crit-bg:#ffe8e8;
+        --crit:#d64541;
+        --crit-b:#ffb3b3;
+        
+        --warn-bg:#fff5e1;
+        --warn:#b36b00;
+        --warn-b:#ffcc80;
+        
+        --accent:#ff8c00;
+        --radius:14px;
+}
+
+*{box-sizing:border-box}
+body{
+        margin:0;
+        font-family:system-ui,-apple-system,"Noto Sans JP","Meiryo",sans-serif;
+        background:var(--bg);
+        color:var(--text);
+}
+
+.header{
+        position:sticky; top:0;
+        background:var(--card);
+        border-bottom:1px solid var(--border);
+        padding:16px 18px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:14px;
+}
+
+.title h1{margin:0; font-size:20px}
+.title p{margin:2px 0 0; color:var(--muted); font-size:12px}
+
+.right{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+
+.chip{
+        display:inline-flex; align-items:center; gap:8px;
+        padding:7px 12px;
+        border-radius:999px;
+        border:1px solid var(--border);
+        background:#fff;
+        font-size:12px;
+        color:var(--muted);
+}
+
+.toggle{cursor:pointer; user-select:none}
+.toggle input{margin-right:8px}
+
+.badge{
+        display:inline-block;
+        padding:3px 10px;
+        border-radius:999px;
+        border:1px solid var(--border);
+        font-size:11px;
+        background:#fff;
+}
+.badge.ok{background:var(--ok-bg); color:var(--ok); border-color:var(--ok-b)}
+.badge.crit{background:var(--crit-bg); color:var(--crit); border-color:var(--crit-b)}
+.badge.warn{background:var(--warn-bg); color:var(--warn); border-color:var(--warn-b)}
+
+.main{padding:18px; display:grid; gap:16px}
+
+.cards{
+        display:grid;
+        grid-template-columns:repeat(4, minmax(200px, 1fr));
+        gap:12px;
+}
+.card{
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        box-shadow:var(--shadow);
+        padding:14px;
+}
+.card .label{color:var(--muted); font-size:12px}
+.card .value{margin-top:8px; font-size:24px; font-weight:700}
+.unit{font-size:12px; color:var(--muted); font-weight:500}
+
+.grid{
+        display:grid;
+        grid-template-columns: 1.3fr 1fr;
+        grid-auto-rows: minmax(200px, auto);
+        gap:12px;
+}
+.panel{
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        box-shadow:var(--shadow);
+        padding:14px;
+}
+.panelHeader{
+        display:flex; align-items:flex-end; justify-content:space-between;
+        gap:10px; margin-bottom:10px;
+}
+.panel h2{margin:0; font-size:16px}
+.small{color:var(--muted); font-size:12px}
+
+.tableWrap{overflow:auto}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th, td{padding:10px 8px; border-bottom:1px solid var(--border); text-align:left}
+tbody tr:hover{background:#fafafa}
+tbody tr.selected{outline:2px solid rgba(255,140,0,.25); background:#fff7ed}
+
+.deviceLink{cursor:pointer; color:#c75a00; font-weight:600}
+
+.chartWrap{height:320px}
+.chartWrap canvas{width:100% !important; height:100% !important}
+
+.alerts{display:grid; gap:10px; max-height:320px; overflow:auto}
+.alert{
+        border:1px solid var(--crit-b);
+        background:var(--crit-bg);
+        border-radius:12px;
+        padding:10px;
+        display:grid;
+        gap:6px;
+}
+.alertTop{display:flex; justify-content:space-between; align-items:center}
+.alertTitle{font-weight:800; color:var(--crit)}
+.alertMeta{color:var(--muted); font-size:12px}
+
+.footer{
+        padding:16px 18px;
+        color:var(--muted);
+        font-size:12px;
+        border-top:1px solid var(--border);
+        background:var(--card);
+}
+
+@media (max-width: 980px){
+        .cards{grid-template-columns:repeat(2,1fr)}
+        .grid{grid-template-columns:1fr}
+}
+@media (max-width: 520px){
+        .cards{grid-template-columns:1fr}
+}

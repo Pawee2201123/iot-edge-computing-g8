@@ -39,6 +39,9 @@
 
             (python3.withPackages (ps: [ 
                                    ps.paho-mqtt 
+                                   ps.flask            # Web Server
+                                   ps.flask-socketio   # WebSockets
+                                   ps.eventlet         # <--- The missing one
             ]))
           ];
 
