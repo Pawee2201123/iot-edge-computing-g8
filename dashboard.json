@@ -1,54 +1,16 @@
-
-{
-  "type": "object",
-  "required": ["lastUpdate", "systemStatus", "stats", "telemetry", "chart", "alerts"],
-  "properties": {
-    "lastUpdate": { "type": "string" },
-    "systemStatus": { "type": "string" },
-    "stats": {
-      "type": "object",
-      "required": ["devices", "peakAccel", "avgTemp", "falls24h"],
-      "properties": {
-        "devices": { "type": "number" },
-        "peakAccel": { "type": "number" },
-        "avgTemp": { "type": "number" },
-        "falls24h": { "type": "number" }
-      }
-    },
-    "telemetry": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["deviceId", "accel", "temp", "timestamp", "isFall"],
-        "properties": {
-          "deviceId": { "type": "string" },
-          "accel": { "type": "number" },
-          "temp": { "type": "number" },
-          "timestamp": { "type": "string" },
-          "isFall": { "type": "boolean" }
-        }
-      }
-    },
-    "chart": {
-      "type": "object",
-      "required": ["labels", "accel", "temp"],
-      "properties": {
-        "labels": { "type": "array", "items": { "type": "string" } },
-        "accel": { "type": "array", "items": { "type": "number" } },
-        "temp": { "type": "array", "items": { "type": "number" } }
-      }
-    },
-    "alerts": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["deviceId", "time", "accel"],
-        "properties": {
-          "deviceId": { "type": "string" },
-          "time": { "type": "string" },
-          "accel": { "type": "number" }
-        }
-      }
-    }
+[
+  {
+    "deviceId": "Device-1",
+    "t": "2026-01-15T14:32:10+09:00",
+    "a": 1.18,
+    "temp": 36.6,
+    "fall": 0
+  },
+  {
+    "deviceId": "Device-2",
+    "t": "2026-01-15T14:32:10+09:00",
+    "a": 3.95,
+    "temp": 36.8,
+    "fall": 1
   }
-}
+]
