@@ -4,6 +4,7 @@
 #include <M5Core2.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
 
 // --- DECLARATIONS ONLY (No Values Here!) ---
 extern const char* WIFI_SSID;
@@ -14,5 +15,5 @@ extern const int   MQTT_PORT;
 // --- FUNCTIONS ---
 void setup_wifi(const char* device_name);
 void ensure_mqtt(PubSubClient& client, const char* client_id);
-
+void send_heartbeat(PubSubClient& client, const char* client_id, const char* topic);
 #endif
