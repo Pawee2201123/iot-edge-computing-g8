@@ -12,9 +12,26 @@
 システムは **MQTT (Message Queuing Telemetry Transport)** プロトコルを中心に構築されています。
 
 ```mermaid
-[M5Stack Units]  --->  [Wi-Fi]  --->  [MQTT Broker]  --->  [Python Server]  --->  [Web Dashboard]
-   (Sender)                            (Mosquitto)           (Flask/SocketIO)       (Browser)
-
+graph LR
+    A[M5Stack Units] -->|Wi-Fi| B[MQTT Broker]
+    B -->|Subscribe| C[Python Server]
+    C -->|WebSocket| D[Web Dashboard]
+    
+    subgraph Edge Layer
+    A
+    end
+    
+    subgraph Infrastructure
+    B
+    end
+    
+    subgraph Backend
+    C
+    end
+    
+    subgraph Frontend
+    D
+    end
 ```
 
 1. **Edge Devices (M5Stack):** センサーデータを収集し、MQTTブローカーに送信。
