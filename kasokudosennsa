@@ -1,0 +1,44 @@
+#include <M5Unified.h>
+ 
+float accelerationX = 0.0F;
+float accelerationY = 0.0F;
+float accelerationZ = 0.0F;
+ 
+float accNorm(); // 追加
+ 
+void setup() {
+    auto cfg = M5.config();
+    M5.begin(cfg); // M5Core2の初期化
+    M5.Imu.begin(); // IMUセンサーの初期化
+ 
+    M5.Lcd.fillScreen(BLACK); // 背景色を黒に設定
+    //M5.Lcd.setTextColor(WHITE, BLACK); // テキスト色を白に設定
+    M5.Lcd.setTextSize(4); // テキストサイズを設定
+}
+ 
+void loop() {
+ M5.update(); // ボタン状態の更新
+ M5.Imu.getAccelData(&accelerationX, &accelerationY, &accelerationZ); // 加速度データ取得
+ 
+ // LCDに加速度データを表示
+ M5.Lcd.setCursor(10, 10);
+ M5.Lcd.printf("X: %.2f", accelerationX);
+ M5.Lcd.setCursor(10, 50);
+ M5.Lcd.printf("Y: %.2f", accelerationY);
+ M5.Lcd.setCursor(10, 90);
+ M5.Lcd.printf("Z: %.2f", accelerationZ);
+ delay(100); // 更新間隔
+ 
+ M5.Lcd.printf(">accNorm:%6.3f¥n",accNorm());
+ delay(50);
+}
+ 
+float accNorm() {
+float accX, accY, accZ;
+M5.Imu.getAccelData(&accX,&accY,&accZ);
+// 加速度ベクトルの大きさの計算
+ const float acc_Norm = sqrt(accX * accX + accY * accY + accZ * accZ);
+return acc_Norm;
+M5.Lcd.setCursor(10, 130);
+ M5.Lcd.printf("g: %.2f", accX * accX + accY * accY + accZ * accZ);
+}
