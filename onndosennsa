@@ -1,0 +1,60 @@
+//暑さ指数計 Copyright (c) 2022- @logic_star
+//#define CORE2 //CORE2を使用する場合は有効化要
+#ifdef CORE2
+  #include <M5Unified.h>
+#else
+  #include <M5Unified.h>
+#endif
+#include "UNIT_ENV.h" //ENV IIIライブラリ
+SHT3X sht30; //温湿度センサ
+QMP6988 qmp6988; //気圧センサ
+float tmp = 0.0; //温度
+float hum = 0.0; //湿度
+float pressure = 0.0; //気圧
+float WBGT = 0.0; //暑さ指数
+float THI = 0.0; //不快指数
+void setup() {
+  M5.begin(true, false, true, true);
+  qmp6988.init(); //気圧センサ初期化
+  M5.Lcd.fillScreen(TFT_WHITE); //M5Stackの画面初期化
+  M5.Lcd.setTextColor(TFT_BLACK, TFT_WHITE);
+  M5.Lcd.setTextDatum(TL_DATUM);
+  M5.Lcd.drawJpg(image_bg, sizeof image_bg, 0, 30); //背景の表示
+}
+void loop() {
+  pressure = qmp6988.calcPressure() / 100; //気圧を測定
+  if(sht30.get()==0){ //Obtain the data of shT30. //温湿度を測定
+    tmp = sht30.cTemp; //Store the temperature obtained from shT30.
+    hum = sht30.humidity; //Store the humidity obtained from the SHT30.
+  };
+  WBGT = (tmp*0.003289+0.01844)*hum+(0.6868*tmp-2.022); //暑さ指数の計算
+  THI = (tmp*0.81+hum*0.01*(tmp*0.99-14.3)+46.3); //不快指数の計算
+  if (WBGT >= 31) M5.Lcd.drawJpg(image4, sizeof image4, 180, 80); //暑さ指数に応じてイラスト表示
+  else if (WBGT >= 28) M5.Lcd.drawJpg(image3, sizeof image3, 180, 80);
+  else if (WBGT >= 25) M5.Lcd.drawJpg(image2, sizeof image2, 180, 80);
+  else if (WBGT >= 21) M5.Lcd.drawJpg(image1, sizeof image1, 180, 80);
+  else M5.Lcd.drawJpg(image0, sizeof image0, 180, 80);
+  if (WBGT >= 28){ //暑さ指数28℃以上のときにビープ音を鳴らす。CORE2を除く。
+#ifndef CORE2
+    M5.Speaker.beep();
+    delay(100);
+    M5.Speaker.mute();
+#endif
+  }
+  M5.Lcd.setTextFont(6); //暑さ指数の表示
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setCursor(128, 44);
+  M5.Lcd.printf("%2.1f", WBGT);
+  M5.Lcd.setCursor(128, 100); //不快指数の表示
+  M5.Lcd.printf("%2.0f", THI);
+  M5.Lcd.setTextFont(4); //温度の表示
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setCursor(60, 153);
+  M5.Lcd.printf("%2.1f 'C", tmp);
+  M5.Lcd.setCursor(60, 183); //湿度の表示
+  M5.Lcd.printf("%2.1f %%", hum);
+  M5.Lcd.setCursor(60, 213); //気圧の表示
+  M5.Lcd.printf("%4.1fhPa", pressure);
+  delay(1000); //1秒ウェイト
+}
+ 
