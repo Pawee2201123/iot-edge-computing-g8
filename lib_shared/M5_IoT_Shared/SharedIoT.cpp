@@ -1,17 +1,19 @@
 #include "SharedIoT.h"
 
 // --- DEFINITIONS (Values Go Here!) ---
+
 /*
+   
 const char* WIFI_SSID = "Pawee-iphone";
 const char* WIFI_PASS = "05237wifi";
 const char* MQTT_HOST = "172.20.10.13";      
-const int   MQTT_PORT = 1883;
 */
 
 
 const char* WIFI_SSID = "aterm-3465e4-g";
 const char* WIFI_PASS = "5dc0fc9134eee";
 const char* MQTT_HOST = "192.168.10.106";      
+
 const int   MQTT_PORT = 1883;
 
 void setup_wifi(const char* device_name) {
