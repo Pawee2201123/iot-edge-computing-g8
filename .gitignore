@@ -1,0 +1,49 @@
+# Environment variables (contains secrets!)
+.env
+server/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.vscode/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# Docker & Nix build artifacts
+result
+*.tar.gz
+mosquitto/data/
+mosquitto/log/
+
+# SSH keys
+*.pem
+*.key

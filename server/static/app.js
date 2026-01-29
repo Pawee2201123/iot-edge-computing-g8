@@ -219,3 +219,263 @@ setInterval(() => {
         updateUI();
     }
 }, 1000);
+
+// =====================
+// 5. HISTORICAL DATA & ANALYTICS
+// =====================
+
+let envChart = null;
+let currentChartData = [];
+
+// Initialize Chart.js on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initChart();
+    refreshStats();
+    updateCharts();
+    updateHistory();
+
+    // Auto-refresh charts every 30 seconds
+    setInterval(() => {
+        updateCharts();
+        checkThresholds();
+    }, 30000);
+
+    // Auto-refresh history every 60 seconds
+    setInterval(updateHistory, 60000);
+
+    // Monitor threshold changes
+    document.getElementById('tempThreshold').addEventListener('input', checkThresholds);
+    document.getElementById('humThreshold').addEventListener('input', checkThresholds);
+});
+
+function initChart() {
+    const ctx = document.getElementById('envChart');
+    if (!ctx) return;
+
+    envChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: '#ff6384',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    yAxisID: 'y',
+                    tension: 0.4
+                },
+                {
+                    label: 'Humidity (%)',
+                    data: [],
+                    borderColor: '#36a2eb',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    yAxisID: 'y1',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            // Format timestamp
+                            return new Date(context[0].label).toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    },
+                    ticks: {
+                        callback: function(value, index) {
+                            const date = new Date(this.getLabelForValue(value));
+                            return date.toLocaleTimeString();
+                        },
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Temperature (°C)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Humidity (%)'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+async function updateCharts() {
+    const hours = document.getElementById('chartTimeRange').value;
+
+    try {
+        const response = await fetch(`/api/heat/history?hours=${hours}&limit=100`);
+        const result = await response.json();
+
+        if (!result.success || !result.data || result.data.length === 0) {
+            console.log('No chart data available yet');
+            return;
+        }
+
+        // Sort by time (oldest first for proper chart display)
+        const data = result.data.reverse();
+        currentChartData = data;
+
+        const labels = data.map(d => d.time);
+        const temps = data.map(d => d.temp);
+        const hums = data.map(d => d.humidity);
+
+        envChart.data.labels = labels;
+        envChart.data.datasets[0].data = temps;
+        envChart.data.datasets[1].data = hums;
+        envChart.update();
+
+    } catch (error) {
+        console.error('Error fetching chart data:', error);
+    }
+}
+
+async function refreshStats() {
+    try {
+        const response = await fetch('/api/stats');
+        const result = await response.json();
+
+        if (!result.success) {
+            console.error('Failed to fetch stats');
+            return;
+        }
+
+        const stats = result.data;
+
+        // Update statistics display
+        document.getElementById('stat-avg-temp').textContent =
+            stats.temp.avg ? `${stats.temp.avg}°C` : '--';
+        document.getElementById('stat-min-temp').textContent =
+            stats.temp.min ? `${stats.temp.min}°C` : '--';
+        document.getElementById('stat-max-temp').textContent =
+            stats.temp.max ? `${stats.temp.max}°C` : '--';
+        document.getElementById('stat-avg-hum').textContent =
+            stats.humidity.avg ? `${stats.humidity.avg}%` : '--';
+        document.getElementById('stat-readings').textContent = stats.temp.readings;
+        document.getElementById('stat-emergencies').textContent = stats.events.emergencies;
+        document.getElementById('stat-messages').textContent = stats.events.messages;
+
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+    }
+}
+
+async function updateHistory() {
+    const hours = document.getElementById('historyTimeRange').value;
+    const filter = document.getElementById('eventFilter').value;
+    const emergOnly = filter === 'emerg' ? 'true' : 'false';
+
+    try {
+        const response = await fetch(`/api/commu/history?hours=${hours}&emerg_only=${emergOnly}&limit=100`);
+        const result = await response.json();
+
+        const tbody = document.getElementById('historyRows');
+
+        if (!result.success) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#d64541;">Error loading history</td></tr>';
+            return;
+        }
+
+        if (result.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 20px;">No events found in this time range</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+
+        result.data.forEach(event => {
+            const tr = document.createElement('tr');
+            if (event.emerg) {
+                tr.className = 'emergency';
+            }
+
+            const time = new Date(event.time).toLocaleString();
+            const badgeClass = event.emerg ? 'emergency' : 'message';
+            const badgeText = event.emerg ? '🚨 EMERGENCY' : '💬 Message';
+
+            tr.innerHTML = `
+                <td>${time}</td>
+                <td><span class="event-badge ${badgeClass}">${badgeText}</span></td>
+                <td>${event.msg || 'N/A'}</td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+    } catch (error) {
+        console.error('Error fetching history:', error);
+        document.getElementById('historyRows').innerHTML =
+            '<tr><td colspan="3" style="text-align:center; color:#d64541;">Failed to load history</td></tr>';
+    }
+}
+
+function checkThresholds() {
+    if (currentChartData.length === 0) return;
+
+    const tempThreshold = parseFloat(document.getElementById('tempThreshold').value);
+    const humThreshold = parseFloat(document.getElementById('humThreshold').value);
+
+    // Get latest reading
+    const latest = currentChartData[currentChartData.length - 1];
+    if (!latest) return;
+
+    const alertDiv = document.getElementById('thresholdAlert');
+    const alerts = [];
+
+    if (latest.temp > tempThreshold) {
+        alerts.push(`⚠️ High temperature: ${latest.temp}°C (threshold: ${tempThreshold}°C)`);
+    }
+
+    if (latest.humidity > humThreshold) {
+        alerts.push(`⚠️ High humidity: ${latest.humidity}% (threshold: ${humThreshold}%)`);
+    }
+
+    if (alerts.length > 0) {
+        alertDiv.className = 'threshold-status alert';
+        alertDiv.textContent = alerts.join(' | ');
+    } else {
+        alertDiv.className = 'threshold-status';
+        alertDiv.textContent = '✓ All readings within normal range';
+        alertDiv.style.background = 'var(--ok-bg)';
+        alertDiv.style.color = 'var(--ok)';
+        alertDiv.style.border = '1px solid var(--ok-b)';
+    }
+}

@@ -12,7 +12,7 @@ const char* MQTT_HOST = "172.20.10.13";
 
 const char* WIFI_SSID = "aterm-3465e4-g";
 const char* WIFI_PASS = "5dc0fc9134eee";
-const char* MQTT_HOST = "192.168.10.106";      
+const char* MQTT_HOST = "50.16.142.67";  // AWS EC2 Elastic IP      
 
 const int   MQTT_PORT = 1883;
 
